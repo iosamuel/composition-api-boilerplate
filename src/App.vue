@@ -1,3 +1,7 @@
-<script setup></script>
+<script setup>
+import Poll from "./components/Poll.vue";
+</script>
 
-<template></template>
+<template>
+  <Poll />
+</template>
