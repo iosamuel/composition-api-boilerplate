@@ -1,23 +1,55 @@
-<script setup></script>
+<script setup>
+import { ref, reactive } from "vue";
+
+const pollData = reactive({
+  title: "What is your favorite color?",
+  options: [],
+});
+
+const optionInput = ref("");
+
+function addOption() {
+  pollData.options.push({
+    name: optionInput.value,
+    votes: 0,
+  });
+}
+
+function removeOption(index) {
+  pollData.options.splice(index, 1);
+}
+
+function submitVote(index) {
+  pollData.options[index].votes++;
+}
+</script>
 
 <template>
   <div class="w-96 mx-auto p-5 flex flex-col items-center">
     <div class="w-full flex flex-col gap-2 p-5 bg-slate-600 text-white rounded">
-      <h2 class="text-2xl">Poll Title</h2>
+      <h2 class="text-2xl">{{ pollData.title }}</h2>
       <ul class="w-72 mx-auto">
-        <li class="border p-2 relative">
-          <span class="block w-2/3 break-words">Option 1</span>
-          <span class="absolute top-0 right-0 p-2"> (2 votes) </span>
+        <li
+          v-for="(option, index) in pollData.options"
+          :key="option.name"
+          class="border p-2 relative"
+        >
+          <span class="block w-2/3 break-words">{{ option.name }}</span>
+          <span class="absolute top-0 right-0 p-2">
+            ({{ option.votes }} votes)
+          </span>
           <div class="mt-2 text-sm">
             <button
               class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-xs px-2 py-1 mr-1 focus:outline-none"
               type="button"
+              @click="submitVote(index)"
             >
               Vote
             </button>
             <button
               class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-xs px-2 py-1"
               type="button"
+              @click="removeOption(index)"
             >
               Remove
             </button>
@@ -26,16 +58,18 @@
       </ul>
     </div>
     <form class="w-full p-2 flex flex-col">
-      <label for="option" class="block mb-2 text-sm font-medium text-gray-900">
-        Add an option
-      </label>
+      <label for="option" class="block mb-2 text-sm font-medium text-gray-900"
+        >Add an option</label
+      >
       <input
         type="text"
         id="option"
+        v-model="optionInput"
         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
       />
       <button
         type="button"
+        @click="addOption"
         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
       >
         Add
